@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -111,16 +112,21 @@ fun HomeScreen(
     onButtonBackwardClick: () -> Unit
 ) {
 //    val channelIndexValue = channelIndex.value
-    Column (modifier = Modifier
+    Box (modifier = Modifier
                  .fillMaxSize()
       //           .border(4.dp, Color.Red)
                        ){
         ExoPlayerView(channelIndex = channelIndex,
-            splitFraction = 0.6f)
-        NavigationButtons(channelIndex = channelIndex,onButtonForwardClick = onButtonForwardClick,
-            onButtonBackwardClick = onButtonBackwardClick)
-        Spacer(Modifier.width(30.dp))
-        InformationBox(channelIndex = channelIndex)
+            splitFraction = 1f)
+        Column (modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Bottom){
+            NavigationButtons(
+                channelIndex = channelIndex, onButtonForwardClick = onButtonForwardClick,
+                onButtonBackwardClick = onButtonBackwardClick
+            )
+            Spacer(Modifier.width(30.dp))
+            InformationBox(channelIndex = channelIndex)
+        }
     }
 }
 
@@ -144,7 +150,8 @@ fun NavigationButtons(
         horizontalArrangement = Arrangement.Center) {
         Button(
             onClick = onButtonBackwardClick,
-            Modifier.padding(end = 20.dp)
+            Modifier.padding(end = 20.dp),
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text("Назад", color = Color.White)
         }
@@ -242,7 +249,8 @@ fun ExoPlayerView(channelIndex: State<Int>,
     BoxWithConstraints(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
-            .padding(top = 10.dp)
+            .fillMaxSize()
+    //        .padding(top = 10.dp)
     //        .border(4.dp, Color.Red)
     ) {
 
