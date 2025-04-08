@@ -269,7 +269,7 @@ fun ExoPlayerView(channelIndex: State<Int>,
                                 ViewGroup.LayoutParams.MATCH_PARENT
                             )
                             // Set resize mode to fill the available space
-//                            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
+                            //resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
                             // Hide unnecessary player controls
                             setShowNextButton(false)
                             setShowPreviousButton(false)
