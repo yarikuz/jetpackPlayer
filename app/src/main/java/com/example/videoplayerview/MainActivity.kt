@@ -9,7 +9,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +20,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +36,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +69,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val channelIndex = mutableIntStateOf(0)
+        val channelIndex = mutableIntStateOf(1)
         setContent {
             HomeScreen(
                 channelIndex = channelIndex,
@@ -103,13 +111,16 @@ fun HomeScreen(
     onButtonBackwardClick: () -> Unit
 ) {
 //    val channelIndexValue = channelIndex.value
-    Column (modifier = Modifier.fillMaxSize()){
-        Text("MOOOOOOOO!!!!")
+    Column (modifier = Modifier
+                 .fillMaxSize()
+      //           .border(4.dp, Color.Red)
+                       ){
         ExoPlayerView(channelIndex = channelIndex,
             splitFraction = 0.6f)
         NavigationButtons(channelIndex = channelIndex,onButtonForwardClick = onButtonForwardClick,
             onButtonBackwardClick = onButtonBackwardClick)
-        Text("MOOOOOOOO!!!!")
+        Spacer(Modifier.width(30.dp))
+        InformationBox(channelIndex = channelIndex)
     }
 }
 
@@ -120,9 +131,17 @@ fun NavigationButtons(
     onButtonBackwardClick: () -> Unit
 ) {
     val channelIndexValue = channelIndex.value
-    Row(modifier = Modifier.fillMaxSize().padding(end = 20.dp),
+
+    Row(modifier = Modifier
+        .padding(top = 20.dp)
+        .fillMaxWidth()
+        .wrapContentSize(Alignment.TopCenter)
+        .border(4.dp, Color.Black, shape = RoundedCornerShape(10.dp))
+        .padding(15.dp),
+
+
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End) {
+        horizontalArrangement = Arrangement.Center) {
         Button(
             onClick = onButtonBackwardClick,
             Modifier.padding(end = 20.dp)
@@ -134,13 +153,33 @@ fun NavigationButtons(
         ) {
             Text("Вперед", color = Color.White)
         }
-        Spacer(Modifier.width(15.dp))
-        Column {
+
+
+
+    }
+}
+
+@Composable
+fun InformationBox(
+    channelIndex: State<Int>
+){
+    val channelIndexValue = channelIndex.value
+
+        Column (modifier = Modifier.padding(top = 10.dp)
+            .fillMaxWidth()
+
+            .wrapContentSize(Alignment.TopCenter)
+            .border(4.dp, Color.Black, shape = RoundedCornerShape(10.dp))
+            .padding(15.dp)
+            .background(Color.Red)
+            ,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            ){
             Text(channels[channelIndexValue][0])
+            Spacer(Modifier.width(30.dp))
             Text(channels[channelIndexValue][1])
         }
 
-    }
 }
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -151,14 +190,15 @@ fun ExoPlayerView(channelIndex: State<Int>,
                   splitFraction: Float = 0.8f) {
     // Get the current context
     val context = LocalContext.current
+    Log.d("Boom", "$context")
 //    val channelIndex = remember { mutableIntStateOf(0) }
     val channelIndexValue = channelIndex.value
     Log.d("Boom", "ClickCounter ${channels[channelIndexValue][1]}")
     // Initialize ExoPlayer
 //    val exoPlayer = remember (channelIndex){ExoPlayer.Builder(context).build()}
-    val exoPlayer = ExoPlayer.Builder(context).build()
+    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
     val defaultHttpDataSourceFactory =
-        DataSource.Factory { UdpDataSource(2500, 100000) }
+        DataSource.Factory { UdpDataSource(2500, 20000) }
 //    val defaultHttpDataSourceFactory: DataSource.Factory =  DefaultHttpDataSource.Factory()
     // Create a MediaSource
     val tsExtractorFactory = ExtractorsFactory {
@@ -203,6 +243,7 @@ fun ExoPlayerView(channelIndex: State<Int>,
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .padding(top = 10.dp)
+    //        .border(4.dp, Color.Red)
     ) {
 
             // Use AndroidView to embed an Android View (PlayerView) into Compose
