@@ -66,4 +66,5 @@ dependencies {
     implementation libs.androidx.media3.exoplayer.v120
     implementation libs.androidx.media3.ui.v120
     implementation libs.androidx.media3.exoplayer.rtsp
+    implementation "androidx.compose.material:material-icons-extended"
 }
